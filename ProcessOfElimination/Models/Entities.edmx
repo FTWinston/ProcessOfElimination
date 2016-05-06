@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ProcessOfElimination.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cards">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Value" Type="int" Nullable="false" />
+          <Property Name="TeamID" Type="int" Nullable="false" />
+          <Property Name="IsEvent" Type="bit" Nullable="false" />
+          <Property Name="NumberPerGame" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GameCards">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GameID" Type="int" Nullable="false" />
+          <Property Name="CardID" Type="int" Nullable="false" />
+          <Property Name="GamePlayerID" Type="int" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="Discarded" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GamePlayers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GameID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PublicTeamID" Type="int" Nullable="false" />
+          <Property Name="PrivateTeamID" Type="int" Nullable="false" />
+          <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsOpen" Type="bit" Nullable="false" />
+          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="NumPlayers" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GameTurns">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GameID" Type="int" Nullable="false" />
+          <Property Name="GameCardID" Type="int" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teams">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Cards_Players">
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="0..1" />
+          <End Role="GameCards" Type="Self.GameCards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GamePlayers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="GamePlayerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cards_Teams">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="Cards" Type="Self.Cards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Cards">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameCards_Cards">
+          <End Role="Cards" Type="Self.Cards" Multiplicity="1" />
+          <End Role="GameCards" Type="Self.GameCards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cards">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="CardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameCards_Games">
+          <End Role="Games" Type="Self.Games" Multiplicity="1" />
+          <End Role="GameCards" Type="Self.GameCards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GamePlayers_Games">
+          <End Role="Games" Type="Self.Games" Multiplicity="1" />
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayers">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GamePlayers_Teams_Private">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayers">
+              <PropertyRef Name="PrivateTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GamePlayers_Teams_Public">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayers">
+              <PropertyRef Name="PublicTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_GameCards">
+          <End Role="GameCards" Type="Self.GameCards" Multiplicity="1" />
+          <End Role="GameTurns" Type="Self.GameTurns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GameCards">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurns">
+              <PropertyRef Name="GameCardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_Games">
+          <End Role="Games" Type="Self.Games" Multiplicity="1" />
+          <End Role="GameTurns" Type="Self.GameTurns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurns">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProcessOfEliminationModelsStoreContainer">
+          <EntitySet Name="Cards" EntityType="Self.Cards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GameCards" EntityType="Self.GameCards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GamePlayers" EntityType="Self.GamePlayers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GameTurns" EntityType="Self.GameTurns" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teams" EntityType="Self.Teams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cards_Players" Association="Self.FK_Cards_Players">
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cards_Teams" Association="Self.FK_Cards_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Cards" EntitySet="Cards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameCards_Cards" Association="Self.FK_GameCards_Cards">
+            <End Role="Cards" EntitySet="Cards" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameCards_Games" Association="Self.FK_GameCards_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Games" Association="Self.FK_GamePlayers_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Teams_Private" Association="Self.FK_GamePlayers_Teams_Private">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Teams_Public" Association="Self.FK_GamePlayers_Teams_Public">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_GameCards" Association="Self.FK_GameTurns_GameCards">
+            <End Role="GameCards" EntitySet="GameCards" />
+            <End Role="GameTurns" EntitySet="GameTurns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_Games" Association="Self.FK_GameTurns_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GameTurns" EntitySet="GameTurns" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProcessOfElimination.Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Card">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Value" Type="Int32" Nullable="false" />
+          <Property Name="TeamID" Type="Int32" Nullable="false" />
+          <Property Name="IsEvent" Type="Boolean" Nullable="false" />
+          <Property Name="NumberPerGame" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Team" Relationship="Self.FK_Cards_Teams" FromRole="Cards" ToRole="Teams" />
+          <NavigationProperty Name="GameCards" Relationship="Self.FK_GameCards_Cards" FromRole="Cards" ToRole="GameCards" />
+        </EntityType>
+        <EntityType Name="GameCard">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GameID" Type="Int32" Nullable="false" />
+          <Property Name="CardID" Type="Int32" Nullable="false" />
+          <Property Name="GamePlayerID" Type="Int32" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="Discarded" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Card" Relationship="Self.FK_GameCards_Cards" FromRole="GameCards" ToRole="Cards" />
+          <NavigationProperty Name="GamePlayer" Relationship="Self.FK_Cards_Players" FromRole="GameCards" ToRole="GamePlayers" />
+          <NavigationProperty Name="Game" Relationship="Self.FK_GameCards_Games" FromRole="GameCards" ToRole="Games" />
+          <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_GameCards" FromRole="GameCards" ToRole="GameTurns" />
+        </EntityType>
+        <EntityType Name="GamePlayer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GameID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PublicTeamID" Type="Int32" Nullable="false" />
+          <Property Name="PrivateTeamID" Type="Int32" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="GameCards" Relationship="Self.FK_Cards_Players" FromRole="GamePlayers" ToRole="GameCards" />
+          <NavigationProperty Name="Game" Relationship="Self.FK_GamePlayers_Games" FromRole="GamePlayers" ToRole="Games" />
+          <NavigationProperty Name="PrivateTeam" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private" FromRole="GamePlayer" ToRole="Team" />
+          <NavigationProperty Name="PublicTeam" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public" FromRole="GamePlayer" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Game">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsOpen" Type="Boolean" Nullable="false" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="NumPlayers" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameCards" Relationship="Self.FK_GameCards_Games" FromRole="Games" ToRole="GameCards" />
+          <NavigationProperty Name="GamePlayers" Relationship="Self.FK_GamePlayers_Games" FromRole="Games" ToRole="GamePlayers" />
+          <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_Games" FromRole="Games" ToRole="GameTurns" />
+        </EntityType>
+        <EntityType Name="GameTurn">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GameID" Type="Int32" Nullable="false" />
+          <Property Name="GameCardID" Type="Int32" Nullable="false" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameCard" Relationship="Self.FK_GameTurns_GameCards" FromRole="GameTurns" ToRole="GameCards" />
+          <NavigationProperty Name="Game" Relationship="Self.FK_GameTurns_Games" FromRole="GameTurns" ToRole="Games" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Cards" Relationship="Self.FK_Cards_Teams" FromRole="Teams" ToRole="Cards" />
+          <NavigationProperty Name="GamePlayers" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private" FromRole="Team" ToRole="GamePlayer" />
+          <NavigationProperty Name="GamePlayers1" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public" FromRole="Team" ToRole="GamePlayer" />
+        </EntityType>
+        <Association Name="FK_Cards_Teams">
+          <End Role="Teams" Type="Self.Team" Multiplicity="1" />
+          <End Role="Cards" Type="Self.Card" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Cards">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameCards_Cards">
+          <End Role="Cards" Type="Self.Card" Multiplicity="1" />
+          <End Role="GameCards" Type="Self.GameCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cards">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="CardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cards_Players">
+          <End Role="GamePlayers" Type="Self.GamePlayer" Multiplicity="0..1" />
+          <End Role="GameCards" Type="Self.GameCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GamePlayers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="GamePlayerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameCards_Games">
+          <End Role="Games" Type="Self.Game" Multiplicity="1" />
+          <End Role="GameCards" Type="Self.GameCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameCards">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_GameCards">
+          <End Role="GameCards" Type="Self.GameCard" Multiplicity="1" />
+          <End Role="GameTurns" Type="Self.GameTurn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GameCards">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurns">
+              <PropertyRef Name="GameCardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GamePlayers_Games">
+          <End Role="Games" Type="Self.Game" Multiplicity="1" />
+          <End Role="GamePlayers" Type="Self.GamePlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayers">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_Games">
+          <End Role="Games" Type="Self.Game" Multiplicity="1" />
+          <End Role="GameTurns" Type="Self.GameTurn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurns">
+              <PropertyRef Name="GameID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cards" EntityType="Self.Card" />
+          <EntitySet Name="GameCards" EntityType="Self.GameCard" />
+          <EntitySet Name="GamePlayers" EntityType="Self.GamePlayer" />
+          <EntitySet Name="Games" EntityType="Self.Game" />
+          <EntitySet Name="GameTurns" EntityType="Self.GameTurn" />
+          <EntitySet Name="Teams" EntityType="Self.Team" />
+          <AssociationSet Name="FK_Cards_Teams" Association="Self.FK_Cards_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Cards" EntitySet="Cards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameCards_Cards" Association="Self.FK_GameCards_Cards">
+            <End Role="Cards" EntitySet="Cards" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cards_Players" Association="Self.FK_Cards_Players">
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameCards_Games" Association="Self.FK_GameCards_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GameCards" EntitySet="GameCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_GameCards" Association="Self.FK_GameTurns_GameCards">
+            <End Role="GameCards" EntitySet="GameCards" />
+            <End Role="GameTurns" EntitySet="GameTurns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Games" Association="Self.FK_GamePlayers_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_Games" Association="Self.FK_GameTurns_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="GameTurns" EntitySet="GameTurns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Teams_Private" Association="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="GamePlayer" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_Teams_Public" Association="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="GamePlayer" EntitySet="GamePlayers" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_GamePlayers_Teams_Private">
+          <End Type="ProcessOfElimination.Models.Team" Role="Team" Multiplicity="1" />
+          <End Type="ProcessOfElimination.Models.GamePlayer" Role="GamePlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayer">
+              <PropertyRef Name="PrivateTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GamePlayers_Teams_Public">
+          <End Type="ProcessOfElimination.Models.Team" Role="Team" Multiplicity="1" />
+          <End Type="ProcessOfElimination.Models.GamePlayer" Role="GamePlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayer">
+              <PropertyRef Name="PublicTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProcessOfEliminationModelsStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Cards">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.Card">
+              <MappingFragment StoreEntitySet="Cards">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="IsEvent" ColumnName="IsEvent" />
+                <ScalarProperty Name="NumberPerGame" ColumnName="NumberPerGame" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GameCards">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.GameCard">
+              <MappingFragment StoreEntitySet="GameCards">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
+                <ScalarProperty Name="CardID" ColumnName="CardID" />
+                <ScalarProperty Name="GamePlayerID" ColumnName="GamePlayerID" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Discarded" ColumnName="Discarded" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GamePlayers">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.GamePlayer">
+              <MappingFragment StoreEntitySet="GamePlayers">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="PublicTeamID" ColumnName="PublicTeamID" />
+                <ScalarProperty Name="PrivateTeamID" ColumnName="PrivateTeamID" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Games">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.Game">
+              <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="IsOpen" ColumnName="IsOpen" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="NumPlayers" ColumnName="NumPlayers" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GameTurns">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.GameTurn">
+              <MappingFragment StoreEntitySet="GameTurns">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
+                <ScalarProperty Name="GameCardID" ColumnName="GameCardID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.Team">
+              <MappingFragment StoreEntitySet="Teams">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
