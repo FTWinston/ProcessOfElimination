@@ -6,9 +6,9 @@
     <edmx:Diagrams>
       <Diagram DiagramId="6a36322d855b4e09bb0f1a4684c4b383" Name="Diagram1">
         <EntityTypeShape EntityType="ProcessOfElimination.Models.Card" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameCard" Width="1.5" PointX="8.625" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameCard" Width="1.5" PointX="8.625" PointY="3.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ProcessOfElimination.Models.GamePlayer" Width="1.5" PointX="5.875" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.Game" Width="1.5" PointX="8.625" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.Game" Width="1.5" PointX="8.625" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ProcessOfElimination.Models.GameTurn" Width="1.5" PointX="11.5" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ProcessOfElimination.Models.Team" Width="1.5" PointX="3.25" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_Cards_Teams" ManuallyRouted="false" />

@@ -9,9 +9,12 @@ drop table Games;
 
 CREATE TABLE Games(
 	[ID] int IDENTITY(1,1) NOT NULL,
-	[IsOpen] bit not null default 1,
-	[IsClosed] bit not null default 0,
+	[Name] nvarchar(50) not null,
+	[Password] nvarchar(50) null default null,
+	[HasStarted] bit not null default 0,
+	[HasFinished] bit not null default 0,
 	[NumPlayers] int not null,
+	[CreatedOn] datetime not null default current_timestamp,
  CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -88,15 +91,15 @@ CREATE TABLE GameTurns(
 
 
 
-CREATE NONCLUSTERED INDEX [IX_Games_IsOpen] ON Games
+CREATE NONCLUSTERED INDEX [IX_Games_HasStarted] ON Games
 (
-	[IsOpen] ASC
+	[HasStarted] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [IX_Games_IsClosed] ON Games
+CREATE NONCLUSTERED INDEX [IX_Games_HasFinished] ON Games
 (
-	[IsClosed] ASC
+	[HasFinished] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 

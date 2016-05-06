@@ -45,9 +45,12 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IsOpen" Type="bit" Nullable="false" />
-          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="HasStarted" Type="bit" Nullable="false" />
+          <Property Name="HasFinished" Type="bit" Nullable="false" />
           <Property Name="NumPlayers" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="GameTurns">
           <Key>
@@ -271,12 +274,15 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IsOpen" Type="Boolean" Nullable="false" />
-          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HasStarted" Type="Boolean" Nullable="false" />
+          <Property Name="HasFinished" Type="Boolean" Nullable="false" />
           <Property Name="NumPlayers" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GameCards" Relationship="Self.FK_GameCards_Games" FromRole="Games" ToRole="GameCards" />
           <NavigationProperty Name="GamePlayers" Relationship="Self.FK_GamePlayers_Games" FromRole="Games" ToRole="GamePlayers" />
           <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_Games" FromRole="Games" ToRole="GameTurns" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="GameTurn">
           <Key>
@@ -296,8 +302,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Cards" Relationship="Self.FK_Cards_Teams" FromRole="Teams" ToRole="Cards" />
-          <NavigationProperty Name="GamePlayers" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private" FromRole="Team" ToRole="GamePlayer" />
-          <NavigationProperty Name="GamePlayers1" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public" FromRole="Team" ToRole="GamePlayer" />
         </EntityType>
         <Association Name="FK_Cards_Teams">
           <End Role="Teams" Type="Self.Team" Multiplicity="1" />
@@ -498,9 +502,12 @@
           <EntitySetMapping Name="Games">
             <EntityTypeMapping TypeName="ProcessOfElimination.Models.Game">
               <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="HasFinished" ColumnName="HasFinished" />
+                <ScalarProperty Name="HasStarted" ColumnName="HasStarted" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="IsOpen" ColumnName="IsOpen" />
-                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
                 <ScalarProperty Name="NumPlayers" ColumnName="NumPlayers" />
               </MappingFragment>
             </EntityTypeMapping>

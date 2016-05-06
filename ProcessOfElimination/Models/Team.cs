@@ -18,8 +18,6 @@ namespace ProcessOfElimination.Models
         public Team()
         {
             this.Cards = new HashSet<Card>();
-            this.GamePlayers = new HashSet<GamePlayer>();
-            this.GamePlayers1 = new HashSet<GamePlayer>();
         }
     
         public int ID { get; set; }
@@ -27,9 +25,5 @@ namespace ProcessOfElimination.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Card> Cards { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GamePlayer> GamePlayers1 { get; set; }
     }
 }
