@@ -6,17 +6,17 @@ using System.Web.Mvc;
 
 namespace ProcessOfElimination.Controllers
 {
-    public class HomeController : Controller
+    public class BrowseController : Controller
     {
+        // GET: Browse
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Help()
+        // GET: Browse/Mine
+        public ActionResult Mine()
         {
-            ViewBag.Message = "Information about the game should be displayed here.";
-
             return View();
         }
     }
