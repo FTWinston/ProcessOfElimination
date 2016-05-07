@@ -50,6 +50,7 @@
           <Property Name="HasStarted" Type="bit" Nullable="false" />
           <Property Name="HasFinished" Type="bit" Nullable="false" />
           <Property Name="NumPlayers" Type="int" Nullable="false" />
+          <Property Name="HostedByUserID" Type="nvarchar" MaxLength="128" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="GameTurns">
@@ -283,6 +284,7 @@
           <NavigationProperty Name="GamePlayers" Relationship="Self.FK_GamePlayers_Games" FromRole="Games" ToRole="GamePlayers" />
           <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_Games" FromRole="Games" ToRole="GameTurns" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HostedByUserID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="GameTurn">
           <Key>
@@ -502,6 +504,7 @@
           <EntitySetMapping Name="Games">
             <EntityTypeMapping TypeName="ProcessOfElimination.Models.Game">
               <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="HostedByUserID" ColumnName="HostedByUserID" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="HasFinished" ColumnName="HasFinished" />
                 <ScalarProperty Name="HasStarted" ColumnName="HasStarted" />

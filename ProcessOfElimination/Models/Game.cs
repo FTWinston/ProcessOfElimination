@@ -29,6 +29,7 @@ namespace ProcessOfElimination.Models
         public bool HasFinished { get; set; }
         public int NumPlayers { get; set; }
         public System.DateTime CreatedOn { get; set; }
+        public string HostedByUserID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GameCard> GameCards { get; set; }

@@ -1,4 +1,6 @@
-﻿using ProcessOfElimination.Models;
+﻿using Microsoft.AspNet.Identity;
+using ProcessOfElimination.Models;
+using ProcessOfElimination.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,9 @@ namespace ProcessOfElimination.Controllers
             if (!ModelState.IsValid)
                 return View("Index", model);
 
-            return RedirectToAction("Lobby", "Game", new { id = 1 });
+            var game = GameService.Create(model, User.Identity.GetUserId());
+
+            return RedirectToAction("Lobby", "Game", new { id = game.ID });
         }
     }
 }

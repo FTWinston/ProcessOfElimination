@@ -10,10 +10,11 @@ drop table Games;
 CREATE TABLE Games(
 	[ID] int IDENTITY(1,1) NOT NULL,
 	[Name] nvarchar(50) not null,
-	[Password] nvarchar(50) null default null,
+	[Password] varchar(32) null default null,
 	[HasStarted] bit not null default 0,
 	[HasFinished] bit not null default 0,
 	[NumPlayers] int not null,
+	[HostedByUserID] nvarchar(128) null default null,
 	[CreatedOn] datetime not null default current_timestamp,
  CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED 
 (
@@ -151,7 +152,9 @@ GO
 
 
 
-
+ALTER TABLE Games WITH CHECK ADD  CONSTRAINT [FK_Games_AspNetUsers] FOREIGN KEY([HostedByUserID])
+REFERENCES [AspNetUsers] ([ID])
+GO
 
 ALTER TABLE GamePlayers WITH CHECK ADD  CONSTRAINT [FK_GamePlayers_Games] FOREIGN KEY([GameID])
 REFERENCES [Games] ([ID])
