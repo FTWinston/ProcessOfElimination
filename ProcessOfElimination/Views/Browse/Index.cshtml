@@ -1,10 +1,35 @@
-﻿@{
+﻿@using ProcessOfElimination.Models
+@using Microsoft.AspNet.Identity;
+@model IEnumerable<Game>
+@{
     ViewBag.Title = "Browse games";
 }
 
 <h2>@ViewBag.Title.</h2>
 <div>
     <p>
-        Browse all existing games here
+        @ViewBag.Message
     </p>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Players</th>
+            <th></th>
+        </tr>
+        @foreach (var game in Model)
+        {
+            var host = game.HostedByUserID == User.Identity.GetUserId();
+            var userID = User.Identity.GetUserId();
+            var joined = game.GamePlayers.Where(gp => gp.UserID == userID).Any();
+
+            <tr class="@(host ? joined ? "info" : "warning" : joined ? "success" : "")">
+                <td>@Html.ActionLink(game.Name, "Lobby", "Game", new { id = game.ID }, new { title = !joined || game.HasStarted ? "click to join this game" : "click to view this game" })</td>
+                <td>@((DateTime.Now - game.CreatedOn).ToSimpleString()) ago</td>
+                <td>@game.GamePlayers.Count / @game.NumPlayers</td>
+                <td>@(game.HasFinished ? "this game has finished" : host ? joined ? "you are hosting this game" : "you are hosting this game, but haven't joined it" : joined ? "you are in this game" : game.HasStarted ? "this game is active" : "")</td>
+            </tr>
+        }
+    </table>
 </div>

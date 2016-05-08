@@ -182,6 +182,7 @@
     <Compile Include="Controllers\BrowseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HostController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -307,7 +308,6 @@
     <Content Include="Views\Shared\_MenuPartial.cshtml" />
     <Content Include="Connections.config" />
     <Content Include="Views\Browse\Index.cshtml" />
-    <Content Include="Views\Browse\Mine.cshtml" />
     <Content Include="Views\Host\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
