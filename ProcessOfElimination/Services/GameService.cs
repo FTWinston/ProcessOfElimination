@@ -8,7 +8,7 @@ using System.Web.Security;
 
 namespace ProcessOfElimination.Services
 {
-    public class GameService
+    public static class GameService
     {
         public static Game Create(CreateViewModel model, string hostUserID)
         {

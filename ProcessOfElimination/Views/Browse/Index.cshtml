@@ -25,7 +25,7 @@
             var joined = game.GamePlayers.Where(gp => gp.UserID == userID).Any();
 
             <tr class="@(host ? joined ? "info" : "warning" : joined ? "success" : "")">
-                <td>@Html.ActionLink(game.Name, "Lobby", "Game", new { id = game.ID }, new { title = !joined || game.HasStarted ? "click to join this game" : "click to view this game" })</td>
+                <td>@Html.ActionLink(game.Name, "Play", "Game", new { id = game.ID }, new { title = !joined || game.HasStarted ? "click to join this game" : "click to view this game" })</td>
                 <td>@((DateTime.Now - game.CreatedOn).ToSimpleString()) ago</td>
                 <td>@game.GamePlayers.Count / @game.NumPlayers</td>
                 <td>@(game.HasFinished ? "this game has finished" : host ? joined ? "you are hosting this game" : "you are hosting this game, but haven't joined it" : joined ? "you are in this game" : game.HasStarted ? "this game is active" : "")</td>
