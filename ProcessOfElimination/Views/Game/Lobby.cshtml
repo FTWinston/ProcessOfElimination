@@ -1,9 +1,49 @@
 ﻿@using ProcessOfElimination.Models
 @using Microsoft.AspNet.Identity;
-@model Game
+@model LobbyViewModel
 @{
-    ViewBag.Title = "Game #" + Model.ID + ": " + Model.Name;
+    ViewBag.Title = "Game #" + Model.Game.ID + " lobby: " + Model.Game.Name;
 }
 
-<h2>Lobby</h2>
+<h2>Lobby: @Model.Game.Name</h2>
 
+@if (Model.Game.GamePlayers.Count > 0)
+{
+<table class="table">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+    </tr>
+
+    @foreach (var player in Model.Game.GamePlayers.OrderBy(gp => gp.Name))
+    {
+        <tr class="@(player == Model.CurrentPlayer ? "info" : "")">
+            <th scope="row">@player.ID</th>
+            <td>@player.Name</td>
+        </tr>
+    }
+</table>
+}
+
+@if (Model.PlayersRemaining > 0)
+{
+    <h3>@Model.PlayersRemaining.Describe("player", "players") still to join</h3>
+}
+
+<p>This game will automatically start once the @Model.Game.NumPlayers.Ordinal() player joins.</p>
+
+@if (Model.PrivateGame)
+{
+    <p>Alternatively, as this is a private game, the host can choose to
+    
+    @if (Model.IsHost)
+    {
+        @Html.ActionLink("start this game immediately", "Start", new { id = Model.Game.ID })
+    }
+    else
+    {
+        @:start this game immediately
+    }
+    
+    . This will prevent any other players from joining.</p>
+}

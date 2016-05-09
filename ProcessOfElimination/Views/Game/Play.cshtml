@@ -1,9 +1,9 @@
 ﻿@using ProcessOfElimination.Models
 @using Microsoft.AspNet.Identity;
-@model Game
+@model PlayViewModel
 @{
-    ViewBag.Title = "Game #" + Model.ID + ": " + Model.Name;
+    ViewBag.Title = "Game #" + Model.Game.ID + ": " + Model.Game.Name;
 }
 
-<h2>Play</h2>
+<h2>@Model.Game.Name</h2>
 

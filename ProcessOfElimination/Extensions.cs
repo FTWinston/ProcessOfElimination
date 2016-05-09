@@ -49,5 +49,36 @@ namespace ProcessOfElimination
 
             return sb.ToString();
         }
+
+        public static string Describe(this int value, string singular, string plural)
+        {
+            return string.Format("{0} {1}", value, value == 1 ? singular : plural);
+        }
+
+        public static string Ordinal(this int value)
+        {
+            if (value <= 0)
+                return value.ToString();
+
+            switch (value % 100)
+            {
+                case 11:
+                case 12:
+                case 13:
+                    return value + "th";
+            }
+
+            switch (value % 10)
+            {
+                case 1:
+                    return value + "st";
+                case 2:
+                    return value + "nd";
+                case 3:
+                    return value + "rd";
+                default:
+                    return value + "th";
+            }
+        }
     }
 }
