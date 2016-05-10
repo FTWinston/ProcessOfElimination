@@ -29,7 +29,7 @@ namespace ProcessOfElimination.Models
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Give your game a name to identify it.")
-                .Length(3, 50).WithMessage("The name must be between 3 and 50 characters long..");
+                .Length(3, 50).WithMessage("The name must be between 3 and 50 characters long.");
 
             RuleFor(x => x.Password).NotEmpty().When(x => x.Private).WithMessage("A private game must have a password.");
             
@@ -38,5 +38,4 @@ namespace ProcessOfElimination.Models
                 .InclusiveBetween(3, 12).WithMessage("A game must have between 3 and 12 player slots.");
         }
     }
-
 }

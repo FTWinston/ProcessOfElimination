@@ -5,45 +5,90 @@
     ViewBag.Title = "Game #" + Model.Game.ID + " lobby: " + Model.Game.Name;
 }
 
+
 <h2>Lobby: @Model.Game.Name</h2>
 
-@if (Model.Game.GamePlayers.Count > 0)
-{
-<table class="table">
-    <tr>
-        <th>#</th>
-        <th>Name</th>
-    </tr>
 
-    @foreach (var player in Model.Game.GamePlayers.OrderBy(gp => gp.Name))
-    {
-        <tr class="@(player == Model.CurrentPlayer ? "info" : "")">
-            <th scope="row">@player.ID</th>
-            <td>@player.Name</td>
-        </tr>
-    }
-</table>
-}
+<div class="row">
+    <div class="col-md-8">
+        @if (Model.Game.GamePlayers.Count > 0)
+        {
+            <table class="table">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                </tr>
 
-@if (Model.PlayersRemaining > 0)
-{
-    <h3>@Model.PlayersRemaining.Describe("player", "players") still to join</h3>
-}
+                @foreach (var player in Model.Game.GamePlayers.OrderBy(gp => gp.Name))
+                {
+                    <tr class="@(player == Model.CurrentPlayer ? "info" : "")">
+                        <th scope="row">@player.ID</th>
+                        <td>@player.Name</td>
+                    </tr>
+                }
+            </table>
+        }
 
-<p>This game will automatically start once the @Model.Game.NumPlayers.Ordinal() player joins.</p>
+        @if (Model.PlayersRemaining > 0)
+        {
+            <h3>@Model.PlayersRemaining.Describe("player", "players") still to join</h3>
+        }
+    </div>
 
-@if (Model.PrivateGame)
-{
-    <p>Alternatively, as this is a private game, the host can choose to
-    
-    @if (Model.IsHost)
-    {
-        @Html.ActionLink("start this game immediately", "Start", new { id = Model.Game.ID })
-    }
-    else
-    {
-        @:start this game immediately
-    }
-    
-    . This will prevent any other players from joining.</p>
-}
+    <div class="col-md-4">
+        <p>This game will start once the @Model.Game.NumPlayers.Ordinal() player joins.</p>
+
+        @if (Model.PrivateGame)
+        {
+        <p>
+            Alternatively, as this is a private game, the host can choose to
+
+            @if (Model.IsHost)
+            {
+                @Html.ActionLink("start this game immediately", "Start", new { id = Model.Game.ID })
+            }
+            else
+            {
+                @:start this game immediately
+            }
+
+            . This will prevent any other players from joining.
+        </p>
+        }
+        @if (Model.CanJoin)
+        {
+        <section>
+            @using (Html.BeginForm("Join", "Game", new { ReturnUrl = ViewBag.ReturnUrl, ID = Model.Game.ID }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <h2>Join this game</h2>
+                @Html.AntiForgeryToken()
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.JoinInfo.GameID);
+                <div class="form-group">
+                    @Html.LabelFor(m => m.JoinInfo.Name, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.JoinInfo.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.JoinInfo.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                if (Model.PrivateGame)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.JoinInfo.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.JoinInfo.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.JoinInfo.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Join game" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+        }
+    </div>
+</div>

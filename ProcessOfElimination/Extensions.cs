@@ -8,6 +8,8 @@ namespace ProcessOfElimination
 {
     public static class Extensions
     {
+        private static Random random = new Random();
+
         public static string ToSimpleString(this TimeSpan ts)
         {
             int parts = 0, partsToShow = 2;
@@ -78,6 +80,24 @@ namespace ProcessOfElimination
                     return value + "rd";
                 default:
                     return value + "th";
+            }
+        }
+
+        public static T PickRandom<T>(this ICollection<T> items)
+        {
+            var toSkip = random.Next(items.Count);
+            return items.Skip(toSkip).Take(1).First();
+        }
+
+        public static void Shuffle<T>(this IList<T> items)
+        {
+            for (int i = 0; i < items.Count - 1; i++)
+            {
+                int j = random.Next(i, items.Count);
+
+                T temp = items[j];
+                items[j] = items[i];
+                items[i] = temp;
             }
         }
     }
