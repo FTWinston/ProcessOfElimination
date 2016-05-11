@@ -5,6 +5,23 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ProcessOfElimination.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="Cards">
           <Key>
             <PropertyRef Name="ID" />
@@ -46,7 +63,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="32" />
           <Property Name="HasStarted" Type="bit" Nullable="false" />
           <Property Name="HasFinished" Type="bit" Nullable="false" />
           <Property Name="NumPlayers" Type="int" Nullable="false" />
@@ -117,6 +134,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GamePlayers_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GamePlayers">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GamePlayers_Games">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="*" />
@@ -153,6 +182,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Games_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Games" Type="Self.Games" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="HostedByUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GameTurns_GameCards">
           <End Role="GameCards" Type="Self.GameCards" Multiplicity="1" />
           <End Role="GameTurns" Type="Self.GameTurns" Multiplicity="*" />
@@ -178,6 +219,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ProcessOfEliminationModelsStoreContainer">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cards" EntityType="Self.Cards" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GameCards" EntityType="Self.GameCards" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GamePlayers" EntityType="Self.GamePlayers" Schema="dbo" store:Type="Tables" />
@@ -200,6 +242,10 @@
             <End Role="Games" EntitySet="Games" />
             <End Role="GameCards" EntitySet="GameCards" />
           </AssociationSet>
+          <AssociationSet Name="FK_GamePlayers_AspNetUsers" Association="Self.FK_GamePlayers_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
           <AssociationSet Name="FK_GamePlayers_Games" Association="Self.FK_GamePlayers_Games">
             <End Role="Games" EntitySet="Games" />
             <End Role="GamePlayers" EntitySet="GamePlayers" />
@@ -211,6 +257,10 @@
           <AssociationSet Name="FK_GamePlayers_Teams_Public" Association="Self.FK_GamePlayers_Teams_Public">
             <End Role="Teams" EntitySet="Teams" />
             <End Role="GamePlayers" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_AspNetUsers" Association="Self.FK_Games_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Games" EntitySet="Games" />
           </AssociationSet>
           <AssociationSet Name="FK_GameTurns_GameCards" Association="Self.FK_GameTurns_GameCards">
             <End Role="GameCards" EntitySet="GameCards" />
@@ -269,6 +319,7 @@
           <NavigationProperty Name="Game" Relationship="Self.FK_GamePlayers_Games" FromRole="GamePlayers" ToRole="Games" />
           <NavigationProperty Name="PrivateTeam" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private" FromRole="GamePlayer" ToRole="Team" />
           <NavigationProperty Name="PublicTeam" Relationship="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public" FromRole="GamePlayer" ToRole="Team" />
+          <NavigationProperty Name="User" Relationship="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers" FromRole="GamePlayer" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="Game">
           <Key>
@@ -276,7 +327,7 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="HasStarted" Type="Boolean" Nullable="false" />
           <Property Name="HasFinished" Type="Boolean" Nullable="false" />
           <Property Name="NumPlayers" Type="Int32" Nullable="false" />
@@ -285,6 +336,7 @@
           <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_Games" FromRole="Games" ToRole="GameTurns" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="HostedByUserID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="HostedByUser" Relationship="ProcessOfElimination.Models.FK_Games_AspNetUsers" FromRole="Game" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="GameTurn">
           <Key>
@@ -432,6 +484,15 @@
             <End Role="Team" EntitySet="Teams" />
             <End Role="GamePlayer" EntitySet="GamePlayers" />
           </AssociationSet>
+          <EntitySet Name="Users" EntityType="ProcessOfElimination.Models.User" />
+          <AssociationSet Name="FK_GamePlayers_AspNetUsers" Association="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="Users" />
+            <End Role="GamePlayer" EntitySet="GamePlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_AspNetUsers" Association="ProcessOfElimination.Models.FK_Games_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="Users" />
+            <End Role="Game" EntitySet="Games" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_GamePlayers_Teams_Private">
           <End Type="ProcessOfElimination.Models.Team" Role="Team" Multiplicity="1" />
@@ -454,6 +515,45 @@
             </Principal>
             <Dependent Role="GamePlayer">
               <PropertyRef Name="PublicTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GamePlayers" Relationship="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers" FromRole="AspNetUser" ToRole="GamePlayer" />
+          <NavigationProperty Name="Games" Relationship="ProcessOfElimination.Models.FK_Games_AspNetUsers" FromRole="AspNetUser" ToRole="Game" />
+        </EntityType>
+        <Association Name="FK_GamePlayers_AspNetUsers">
+          <End Type="ProcessOfElimination.Models.User" Role="AspNetUser" Multiplicity="1" />
+          <End Type="ProcessOfElimination.Models.GamePlayer" Role="GamePlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GamePlayer">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_AspNetUsers">
+          <End Type="ProcessOfElimination.Models.User" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="ProcessOfElimination.Models.Game" Role="Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Game">
+              <PropertyRef Name="HostedByUserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -530,6 +630,20 @@
               <MappingFragment StoreEntitySet="Teams">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ProcessOfElimination.Models.User">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ID" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

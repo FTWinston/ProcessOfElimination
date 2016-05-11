@@ -12,31 +12,27 @@ namespace ProcessOfElimination.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Game
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Game()
+        public User()
         {
-            this.GameCards = new HashSet<GameCard>();
             this.GamePlayers = new HashSet<GamePlayer>();
-            this.GameTurns = new HashSet<GameTurn>();
+            this.Games = new HashSet<Game>();
         }
     
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-        public bool HasStarted { get; set; }
-        public bool HasFinished { get; set; }
-        public int NumPlayers { get; set; }
-        public System.DateTime CreatedOn { get; set; }
-        public string HostedByUserID { get; set; }
+        public string ID { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GameCard> GameCards { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GamePlayer> GamePlayers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GameTurn> GameTurns { get; set; }
-        public virtual User HostedByUser { get; set; }
+        public virtual ICollection<Game> Games { get; set; }
     }
 }

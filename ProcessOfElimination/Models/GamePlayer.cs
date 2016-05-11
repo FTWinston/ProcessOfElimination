@@ -33,5 +33,6 @@ namespace ProcessOfElimination.Models
         public virtual Game Game { get; set; }
         public virtual Team PrivateTeam { get; set; }
         public virtual Team PublicTeam { get; set; }
+        public virtual User User { get; set; }
     }
 }

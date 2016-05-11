@@ -38,9 +38,9 @@ namespace ProcessOfElimination.Controllers
             if (game.Password != null)
             {
                 if (string.IsNullOrEmpty(model.JoinInfo.Password))
-                    ModelState.AddModelError("Join.Password", "You must enter the password to join this game.");
+                    ModelState.AddModelError("JoinInfo.Password", "You must enter the password to join this game.");
                 else if (!GameService.CheckPassword(model.JoinInfo.Password, game))
-                    ModelState.AddModelError("Join.Password", "The password you entered is incorrect.");
+                    ModelState.AddModelError("JoinInfo.Password", "The password you entered is incorrect.");
             }
 
             if (!ModelState.IsValid)

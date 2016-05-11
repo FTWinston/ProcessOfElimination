@@ -31,5 +31,6 @@ namespace ProcessOfElimination.Models
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<GameTurn> GameTurns { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

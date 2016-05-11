@@ -10,20 +10,21 @@
 
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
         @if (Model.Game.GamePlayers.Count > 0)
         {
+            <p>The players currently in the game are listed below.<br/>Note that players choose a nickname for each game, so you won't know who's who when the game starts.</p>
             <table class="table">
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
+                    <th></th>
                 </tr>
 
-                @foreach (var player in Model.Game.GamePlayers.OrderBy(gp => gp.Name))
+                @foreach (var player in Model.Game.GamePlayers)
                 {
                     <tr class="@(player == Model.CurrentPlayer ? "info" : "")">
-                        <th scope="row">@player.ID</th>
-                        <td>@player.Name</td>
+                        <td>@player.User.UserName</td>
+                        <td>@(player.UserID == Model.Game.HostedByUserID ? "host" : "")</td>
                     </tr>
                 }
             </table>
@@ -35,7 +36,7 @@
         }
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         <p>This game will start once the @Model.Game.NumPlayers.Ordinal() player joins.</p>
 
         @if (Model.PrivateGame)
