@@ -42,15 +42,8 @@ namespace ProcessOfElimination.Services
             player.UserID = currentUserID;
 
             db.GamePlayers.Add(player);
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-
-            }
-
+            db.SaveChanges();
+            
             return player;
         }
 

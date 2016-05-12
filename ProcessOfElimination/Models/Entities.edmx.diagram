@@ -5,12 +5,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="6a36322d855b4e09bb0f1a4684c4b383" Name="Diagram1" ZoomLevel="99">
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.Card" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameCard" Width="1.5" PointX="8.625" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.GamePlayer" Width="1.5" PointX="5.875" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.Game" Width="1.5" PointX="8.625" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameTurn" Width="1.5" PointX="11.5" PointY="4.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.Team" Width="1.5" PointX="3.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.Card" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameCard" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.GamePlayer" Width="1.5" PointX="5.75" PointY="3.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.Game" Width="1.5" PointX="5.75" PointY="2.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.GameTurn" Width="1.5" PointX="9.625" PointY="2.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.Team" Width="1.5" PointX="5.75" PointY="4.125" IsExpanded="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_Cards_Teams" ManuallyRouted="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_GameCards_Cards" ManuallyRouted="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_Cards_Players" ManuallyRouted="false" />
@@ -20,9 +20,16 @@
         <AssociationConnector Association="ProcessOfElimination.Models.FK_GameTurns_Games" ManuallyRouted="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_GamePlayers_Teams_Private" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_GamePlayers_Teams_Public" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.User" Width="1.5" PointX="5.875" PointY="0.5" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.User" Width="1.5" PointX="3.5" PointY="3.25" IsExpanded="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_Games_AspNetUsers" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.ChatMessage" Width="1.5" PointX="7.75" PointY="2.75" IsExpanded="false" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_ChatMessages_GamePlayers" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_ChatMessages_GameTurns" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.PlayerAction" Width="1.5" PointX="10" PointY="3.125" IsExpanded="false" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GameCards" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GamePlayers" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GameTurns" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -32,5 +32,7 @@ namespace ProcessOfElimination.Models
         public virtual DbSet<GameTurn> GameTurns { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+        public virtual DbSet<PlayerAction> PlayerActions { get; set; }
     }
 }

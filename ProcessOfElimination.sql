@@ -1,3 +1,5 @@
+drop table PlayerActions;
+drop table ChatMessages;
 drop table GameTurns;
 drop table GameCards;
 drop table Cards;
@@ -81,12 +83,41 @@ CREATE TABLE GameTurns(
 	[ID] int IDENTITY(1,1) NOT NULL,
 	[GameID] int not null,
 	[GameCardID] int not null,
-	[Number] int not null
+	[Number] int not null,
+	[Timestamp] datetime not null default current_timestamp,
+	[Message] varchar(MAX),
  CONSTRAINT [PK_GameTurns] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+
+
+CREATE TABLE ChatMessages(
+	ID int IDENTITY(1,1) not null,
+	GameTurnID int not null,
+	GamePlayerID int not null,
+	Timestamp datetime not null default current_timestamp,
+	Message varchar(MAX) not null,
+ CONSTRAINT [PK_ChatMessages] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE PlayerActions(
+	ID int IDENTITY(1,1) not null,
+	GameTurnID int not null,
+	GamePlayerID int not null,
+	GameCardID int not null,
+	[Order] int not null,
+ CONSTRAINT [PK_PlayerActions] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
 
 
 
@@ -150,6 +181,39 @@ CREATE NONCLUSTERED INDEX [IX_GameTurns_GameID_Number] ON GameTurns
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+CREATE NONCLUSTERED INDEX [IX_ChatMessages_GameTurnID_Timestamp] ON ChatMessages
+(
+	[GameTurnID] ASC,
+	[Timestamp]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ChatMessages_GamePlayerID_Timestamp] ON ChatMessages
+(
+	[GamePlayerID] ASC,
+	[Timestamp]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PlayerActions_GameTurnID_Order] ON PlayerActions
+(
+	[GameTurnID] ASC,
+	[Order] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PlayerActions_GamePlayerID] ON PlayerActions
+(
+	[GamePlayerID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PlayerActions_GameCardID] ON PlayerActions
+(
+	[GameCardID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
 
 
 ALTER TABLE Games WITH CHECK ADD  CONSTRAINT [FK_Games_AspNetUsers] FOREIGN KEY([HostedByUserID])
@@ -193,6 +257,26 @@ REFERENCES [Games] ([ID])
 GO
 
 ALTER TABLE GameTurns WITH CHECK ADD  CONSTRAINT [FK_GameTurns_GameCards] FOREIGN KEY([GameCardID])
+REFERENCES [GameCards] ([ID])
+GO
+
+ALTER TABLE ChatMessages WITH CHECK ADD  CONSTRAINT [FK_ChatMessages_GameTurns] FOREIGN KEY([GameTurnID])
+REFERENCES [GameTurns] ([ID])
+GO
+
+ALTER TABLE ChatMessages WITH CHECK ADD  CONSTRAINT [FK_ChatMessages_GamePlayers] FOREIGN KEY([GamePlayerID])
+REFERENCES [GamePlayers] ([ID])
+GO
+
+ALTER TABLE PlayerActions WITH CHECK ADD  CONSTRAINT [FK_PlayerActions_GameTurns] FOREIGN KEY([GameTurnID])
+REFERENCES [GameTurns] ([ID])
+GO
+
+ALTER TABLE PlayerActions WITH CHECK ADD  CONSTRAINT [FK_PlayerActions_GamePlayers] FOREIGN KEY([GamePlayerID])
+REFERENCES [GamePlayers] ([ID])
+GO
+
+ALTER TABLE PlayerActions WITH CHECK ADD  CONSTRAINT [FK_PlayerActions_GameCards] FOREIGN KEY([GameCardID])
 REFERENCES [GameCards] ([ID])
 GO
 

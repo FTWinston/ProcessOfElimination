@@ -18,6 +18,8 @@ namespace ProcessOfElimination.Models
         public GamePlayer()
         {
             this.GameCards = new HashSet<GameCard>();
+            this.ChatMessages = new HashSet<ChatMessage>();
+            this.PlayerActions = new HashSet<PlayerAction>();
         }
     
         public int ID { get; set; }
@@ -34,5 +36,9 @@ namespace ProcessOfElimination.Models
         public virtual Team PrivateTeam { get; set; }
         public virtual Team PublicTeam { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ChatMessage> ChatMessages { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PlayerAction> PlayerActions { get; set; }
     }
 }
