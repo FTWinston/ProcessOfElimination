@@ -12,7 +12,7 @@ namespace ProcessOfElimination.Controllers
     public class GameController : Controller
     {
         // GET: Game/Play/1
-        public ActionResult Play(int id)
+        public ActionResult Play(int id, int? day)
         {
             var db = new Entities();
             var game = db.Games.Single(g => g.ID == id);
@@ -20,7 +20,13 @@ namespace ProcessOfElimination.Controllers
             if (!game.HasStarted)
                 return View("Lobby", new LobbyViewModel(game, User.Identity.GetUserId()));
 
-            return View("Play", new PlayViewModel(game, User.Identity.GetUserId()));
+            GameTurn turn;
+            if (day.HasValue)
+                turn = game.GameTurns.Single(t => t.Number == day);
+            else
+                turn = game.GameTurns.OrderByDescending(t => t.Number).First();
+
+            return View("Play", new PlayViewModel(game, turn, User.Identity.GetUserId()));
         }
 
         // POST: /Game/Join

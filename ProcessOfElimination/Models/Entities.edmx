@@ -63,6 +63,7 @@
           <Property Name="GameID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Position" Type="int" Nullable="false" />
           <Property Name="PublicTeamID" Type="int" Nullable="false" />
           <Property Name="PrivateTeamID" Type="int" Nullable="false" />
           <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
@@ -86,7 +87,8 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GameID" Type="int" Nullable="false" />
-          <Property Name="GameCardID" Type="int" Nullable="false" />
+          <Property Name="ActivePlayerID" Type="int" Nullable="false" />
+          <Property Name="EventCardID" Type="int" Nullable="false" />
           <Property Name="Number" Type="int" Nullable="false" />
           <Property Name="Timestamp" Type="datetime" Nullable="false" />
           <Property Name="Message" Type="varchar(max)" />
@@ -248,7 +250,19 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="GameTurns">
-              <PropertyRef Name="GameCardID" />
+              <PropertyRef Name="EventCardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_GamePlayers">
+          <End Role="GamePlayers" Type="Self.GamePlayers" Multiplicity="1" />
+          <End Role="GameTurns" Type="Self.GameTurns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GamePlayers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurns">
+              <PropertyRef Name="ActivePlayerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -358,6 +372,10 @@
             <End Role="GameCards" EntitySet="GameCards" />
             <End Role="GameTurns" EntitySet="GameTurns" />
           </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_GamePlayers" Association="Self.FK_GameTurns_GamePlayers">
+            <End Role="GamePlayers" EntitySet="GamePlayers" />
+            <End Role="GameTurns" EntitySet="GameTurns" />
+          </AssociationSet>
           <AssociationSet Name="FK_GameTurns_Games" Association="Self.FK_GameTurns_Games">
             <End Role="Games" EntitySet="Games" />
             <End Role="GameTurns" EntitySet="GameTurns" />
@@ -408,6 +426,7 @@
           <NavigationProperty Name="Game" Relationship="Self.FK_GameCards_Games" FromRole="GameCards" ToRole="Games" />
           <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_GameCards" FromRole="GameCards" ToRole="GameTurns" />
           <NavigationProperty Name="PlayerActions" Relationship="ProcessOfElimination.Models.FK_PlayerActions_GameCards" FromRole="GameCard" ToRole="PlayerAction" />
+          <NavigationProperty Name="GameTurns1" Relationship="ProcessOfElimination.Models.FK_GameTurns_GameCards1" FromRole="GameCard" ToRole="GameTurn" />
         </EntityType>
         <EntityType Name="GamePlayer">
           <Key>
@@ -427,6 +446,8 @@
           <NavigationProperty Name="User" Relationship="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers" FromRole="GamePlayer" ToRole="AspNetUser" />
           <NavigationProperty Name="ChatMessages" Relationship="ProcessOfElimination.Models.FK_ChatMessages_GamePlayers" FromRole="GamePlayer" ToRole="ChatMessage" />
           <NavigationProperty Name="PlayerActions" Relationship="ProcessOfElimination.Models.FK_PlayerActions_GamePlayers" FromRole="GamePlayer" ToRole="PlayerAction" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameTurns" Relationship="ProcessOfElimination.Models.FK_GameTurns_GamePlayers" FromRole="GamePlayer" ToRole="GameTurn" />
         </EntityType>
         <EntityType Name="Game">
           <Key>
@@ -451,12 +472,14 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GameID" Type="Int32" Nullable="false" />
-          <Property Name="GameCardID" Type="Int32" Nullable="false" />
           <Property Name="Number" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="GameCard" Relationship="Self.FK_GameTurns_GameCards" FromRole="GameTurns" ToRole="GameCards" />
           <NavigationProperty Name="Game" Relationship="Self.FK_GameTurns_Games" FromRole="GameTurns" ToRole="Games" />
           <Property Name="Timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ActivePlayerID" Type="Int32" Nullable="false" />
+          <Property Name="EventCardID" Type="Int32" Nullable="false" />
           <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ActivePlayer" Relationship="ProcessOfElimination.Models.FK_GameTurns_GamePlayers" FromRole="GameTurn" ToRole="GamePlayer" />
+          <NavigationProperty Name="EventCard" Relationship="ProcessOfElimination.Models.FK_GameTurns_GameCards1" FromRole="GameTurn" ToRole="GameCard" />
           <NavigationProperty Name="ChatMessages" Relationship="ProcessOfElimination.Models.FK_ChatMessages_GameTurns" FromRole="GameTurn" ToRole="ChatMessage" />
           <NavigationProperty Name="PlayerActions" Relationship="ProcessOfElimination.Models.FK_PlayerActions_GameTurns" FromRole="GameTurn" ToRole="PlayerAction" />
         </EntityType>
@@ -524,7 +547,7 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="GameTurns">
-              <PropertyRef Name="GameCardID" />
+              <PropertyRef Name="EventCardID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -625,6 +648,14 @@
           <AssociationSet Name="FK_PlayerActions_GameTurns" Association="ProcessOfElimination.Models.FK_PlayerActions_GameTurns">
             <End Role="GameTurn" EntitySet="GameTurns" />
             <End Role="PlayerAction" EntitySet="PlayerActions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_GameCards1" Association="ProcessOfElimination.Models.FK_GameTurns_GameCards1">
+            <End Role="GameCard" EntitySet="GameCards" />
+            <End Role="GameTurn" EntitySet="GameTurns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameTurns_GamePlayers" Association="ProcessOfElimination.Models.FK_GameTurns_GamePlayers">
+            <End Role="GamePlayer" EntitySet="GamePlayers" />
+            <End Role="GameTurn" EntitySet="GameTurns" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_GamePlayers_Teams_Private">
@@ -775,6 +806,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GameTurns_GameCards1">
+          <End Type="ProcessOfElimination.Models.GameCard" Role="GameCard" Multiplicity="1" />
+          <End Type="ProcessOfElimination.Models.GameTurn" Role="GameTurn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GameCard">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurn">
+              <PropertyRef Name="EventCardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameTurns_GamePlayers">
+          <End Type="ProcessOfElimination.Models.GamePlayer" Role="GamePlayer" Multiplicity="1" />
+          <End Type="ProcessOfElimination.Models.GameTurn" Role="GameTurn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GamePlayer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GameTurn">
+              <PropertyRef Name="ActivePlayerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -809,6 +864,7 @@
           <EntitySetMapping Name="GamePlayers">
             <EntityTypeMapping TypeName="ProcessOfElimination.Models.GamePlayer">
               <MappingFragment StoreEntitySet="GamePlayers">
+                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="GameID" ColumnName="GameID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -836,11 +892,12 @@
           <EntitySetMapping Name="GameTurns">
             <EntityTypeMapping TypeName="ProcessOfElimination.Models.GameTurn">
               <MappingFragment StoreEntitySet="GameTurns">
+                <ScalarProperty Name="EventCardID" ColumnName="EventCardID" />
+                <ScalarProperty Name="ActivePlayerID" ColumnName="ActivePlayerID" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="GameID" ColumnName="GameID" />
-                <ScalarProperty Name="GameCardID" ColumnName="GameCardID" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
               </MappingFragment>
             </EntityTypeMapping>

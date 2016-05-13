@@ -78,10 +78,12 @@ namespace ProcessOfElimination.Models
 
     public class PlayViewModel : GameViewModel
     {
-        public PlayViewModel(Game game, string currentUserID)
+        public PlayViewModel(Game game, GameTurn turn, string currentUserID)
             : base(game, currentUserID)
         {
-            
+            ViewTurn = turn;
         }
+
+        public GameTurn ViewTurn { get; private set; }
     }
 }

@@ -25,7 +25,7 @@ namespace ProcessOfElimination.Controllers
 
             var game = GameService.Create(model, User.Identity.GetUserId());
 
-            return RedirectToAction("Lobby", "Game", new { id = game.ID });
+            return RedirectToAction("Play", "Game", new { id = game.ID });
         }
     }
 }

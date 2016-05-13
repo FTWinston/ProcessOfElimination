@@ -19,6 +19,7 @@ namespace ProcessOfElimination.Models
         {
             this.GameTurns = new HashSet<GameTurn>();
             this.PlayerActions = new HashSet<PlayerAction>();
+            this.GameTurns1 = new HashSet<GameTurn>();
         }
     
         public int ID { get; set; }
@@ -35,5 +36,7 @@ namespace ProcessOfElimination.Models
         public virtual ICollection<GameTurn> GameTurns { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlayerAction> PlayerActions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GameTurn> GameTurns1 { get; set; }
     }
 }

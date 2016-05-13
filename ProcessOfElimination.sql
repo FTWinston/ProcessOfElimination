@@ -40,6 +40,7 @@ CREATE TABLE GamePlayers(
 	[GameID] int not null,
 	[Name] nvarchar(50) not null,
 	[UserID] nvarchar(128) not null,
+	[Position] int not null,
 	[PublicTeamID] int not null,
 	[PrivateTeamID] int not null,
 	[Notes] nvarchar(MAX) not null default '',
@@ -82,7 +83,8 @@ CREATE TABLE GameCards(
 CREATE TABLE GameTurns(
 	[ID] int IDENTITY(1,1) NOT NULL,
 	[GameID] int not null,
-	[GameCardID] int not null,
+	[ActivePlayerID] int not null,
+	[EventCardID] int not null,
 	[Number] int not null,
 	[Timestamp] datetime not null default current_timestamp,
 	[Message] varchar(MAX),
@@ -256,8 +258,12 @@ ALTER TABLE GameTurns WITH CHECK ADD  CONSTRAINT [FK_GameTurns_Games] FOREIGN KE
 REFERENCES [Games] ([ID])
 GO
 
-ALTER TABLE GameTurns WITH CHECK ADD  CONSTRAINT [FK_GameTurns_GameCards] FOREIGN KEY([GameCardID])
+ALTER TABLE GameTurns WITH CHECK ADD  CONSTRAINT [FK_GameTurns_GameCards] FOREIGN KEY([EventCardID])
 REFERENCES [GameCards] ([ID])
+GO
+
+ALTER TABLE GameTurns WITH CHECK ADD  CONSTRAINT [FK_GameTurns_GamePlayers] FOREIGN KEY([ActivePlayerID])
+REFERENCES [GamePlayers] ([ID])
 GO
 
 ALTER TABLE ChatMessages WITH CHECK ADD  CONSTRAINT [FK_ChatMessages_GameTurns] FOREIGN KEY([GameTurnID])
@@ -283,3 +289,8 @@ GO
 
 insert into Teams select 'Human'
 insert into Teams select 'Alien'
+
+insert into Games select 'Test public game', null, 0, 0, 4, 'b5b9cfcb-6562-4d20-b787-810fa3fa2289', current_timestamp
+insert into gameplayers select 1, 'Alice', '6d643b42-2d15-4fc3-9a50-0efdaa43785c', 0, 1, 1, ''
+insert into gameplayers select 1, 'Bob', 'bf9a9ee6-686d-4696-a835-b951fe7207a3', 0, 1, 1, ''
+insert into gameplayers select 1, 'Carly', 'f9319238-c1d1-4439-b5ef-4d760f4f6da3', 0, 1, 1, ''

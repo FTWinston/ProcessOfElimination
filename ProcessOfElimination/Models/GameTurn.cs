@@ -23,13 +23,15 @@ namespace ProcessOfElimination.Models
     
         public int ID { get; set; }
         public int GameID { get; set; }
-        public int GameCardID { get; set; }
         public int Number { get; set; }
         public System.DateTime Timestamp { get; set; }
+        public int ActivePlayerID { get; set; }
+        public int EventCardID { get; set; }
         public string Message { get; set; }
     
-        public virtual GameCard GameCard { get; set; }
         public virtual Game Game { get; set; }
+        public virtual GamePlayer ActivePlayer { get; set; }
+        public virtual GameCard EventCard { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChatMessage> ChatMessages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

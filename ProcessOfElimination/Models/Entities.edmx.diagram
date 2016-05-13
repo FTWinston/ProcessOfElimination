@@ -26,10 +26,12 @@
         <EntityTypeShape EntityType="ProcessOfElimination.Models.ChatMessage" Width="1.5" PointX="7.75" PointY="2.75" IsExpanded="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_ChatMessages_GamePlayers" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_ChatMessages_GameTurns" />
-        <EntityTypeShape EntityType="ProcessOfElimination.Models.PlayerAction" Width="1.5" PointX="10" PointY="3.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="ProcessOfElimination.Models.PlayerAction" Width="1.5" PointX="10.125" PointY="3.125" IsExpanded="false" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GameCards" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GamePlayers" />
         <AssociationConnector Association="ProcessOfElimination.Models.FK_PlayerActions_GameTurns" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_GameTurns_GameCards1" />
+        <AssociationConnector Association="ProcessOfElimination.Models.FK_GameTurns_GamePlayers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
