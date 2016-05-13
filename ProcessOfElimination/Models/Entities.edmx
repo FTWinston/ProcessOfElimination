@@ -424,9 +424,7 @@
           <NavigationProperty Name="Card" Relationship="Self.FK_GameCards_Cards" FromRole="GameCards" ToRole="Cards" />
           <NavigationProperty Name="GamePlayer" Relationship="Self.FK_Cards_Players" FromRole="GameCards" ToRole="GamePlayers" />
           <NavigationProperty Name="Game" Relationship="Self.FK_GameCards_Games" FromRole="GameCards" ToRole="Games" />
-          <NavigationProperty Name="GameTurns" Relationship="Self.FK_GameTurns_GameCards" FromRole="GameCards" ToRole="GameTurns" />
           <NavigationProperty Name="PlayerActions" Relationship="ProcessOfElimination.Models.FK_PlayerActions_GameCards" FromRole="GameCard" ToRole="PlayerAction" />
-          <NavigationProperty Name="GameTurns1" Relationship="ProcessOfElimination.Models.FK_GameTurns_GameCards1" FromRole="GameCard" ToRole="GameTurn" />
         </EntityType>
         <EntityType Name="GamePlayer">
           <Key>
@@ -447,7 +445,6 @@
           <NavigationProperty Name="ChatMessages" Relationship="ProcessOfElimination.Models.FK_ChatMessages_GamePlayers" FromRole="GamePlayer" ToRole="ChatMessage" />
           <NavigationProperty Name="PlayerActions" Relationship="ProcessOfElimination.Models.FK_PlayerActions_GamePlayers" FromRole="GamePlayer" ToRole="PlayerAction" />
           <Property Name="Position" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="GameTurns" Relationship="ProcessOfElimination.Models.FK_GameTurns_GamePlayers" FromRole="GamePlayer" ToRole="GameTurn" />
         </EntityType>
         <EntityType Name="Game">
           <Key>
@@ -695,7 +692,7 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GamePlayers" Relationship="ProcessOfElimination.Models.FK_GamePlayers_AspNetUsers" FromRole="AspNetUser" ToRole="GamePlayer" />
-          <NavigationProperty Name="Games" Relationship="ProcessOfElimination.Models.FK_Games_AspNetUsers" FromRole="AspNetUser" ToRole="Game" />
+          <NavigationProperty Name="HostedGames" Relationship="ProcessOfElimination.Models.FK_Games_AspNetUsers" FromRole="AspNetUser" ToRole="Game" />
         </EntityType>
         <Association Name="FK_GamePlayers_AspNetUsers">
           <End Type="ProcessOfElimination.Models.User" Role="AspNetUser" Multiplicity="1" />

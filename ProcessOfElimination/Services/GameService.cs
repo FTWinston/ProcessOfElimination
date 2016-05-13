@@ -181,7 +181,9 @@ namespace ProcessOfElimination.Services
             turn.Timestamp = DateTime.Now;
             turn.Message = "This is the first turn of the game. This text should probably come from the event card or something!";
 
-            turn.EventCard = game.DrawCards(true).First(); // TODO: fix me! nothing to stop this card being drawn for a second time
+            // pick an event card for this turn
+            turn.EventCard = game.DrawCards(true).First();
+            turn.EventCard.Discarded = true;
             game.GameTurns.Add(turn);
         }
 

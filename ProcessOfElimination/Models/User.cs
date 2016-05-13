@@ -18,7 +18,7 @@ namespace ProcessOfElimination.Models
         public User()
         {
             this.GamePlayers = new HashSet<GamePlayer>();
-            this.Games = new HashSet<Game>();
+            this.HostedGames = new HashSet<Game>();
         }
     
         public string ID { get; set; }
@@ -33,6 +33,6 @@ namespace ProcessOfElimination.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GamePlayer> GamePlayers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<Game> HostedGames { get; set; }
     }
 }
