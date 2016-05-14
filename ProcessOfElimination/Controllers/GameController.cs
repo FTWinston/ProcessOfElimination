@@ -52,10 +52,17 @@ namespace ProcessOfElimination.Controllers
             if (!ModelState.IsValid)
                 return View("Lobby", new LobbyViewModel(game, User.Identity.GetUserId(), model.JoinInfo));
 
-            GameService.JoinGame(db, game, User.Identity.GetUserId(), model.JoinInfo.Name);
-
+            GameService.JoinGame(game, User.Identity.GetUserId(), model.JoinInfo.Name);
+            
             if (game.GamePlayers.Count >= game.NumPlayers)
+            {
                 GameService.Start(db, game);
+                db.SaveChanges();
+
+                // TODO: send notification email?
+            }
+            else
+                db.SaveChanges();
 
             return RedirectToAction("Play", new { id = game.ID });
         }

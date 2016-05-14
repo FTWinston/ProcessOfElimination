@@ -294,3 +294,17 @@ insert into Games select 'Test public game', null, 0, 0, 4, 'b5b9cfcb-6562-4d20-
 insert into gameplayers select 1, 'Alice', '6d643b42-2d15-4fc3-9a50-0efdaa43785c', 0, 1, 1, ''
 insert into gameplayers select 1, 'Bob', 'bf9a9ee6-686d-4696-a835-b951fe7207a3', 0, 1, 1, ''
 insert into gameplayers select 1, 'Carly', 'f9319238-c1d1-4439-b5ef-4d760f4f6da3', 0, 1, 1, ''
+
+
+insert into cards select 'Event #1', 1, 1, 1, 1, 'Only one of this event card'
+insert into cards select 'Event #2', 2, 1, 1, 1, 'Only one of this event card'
+insert into cards select 'Event #3', 3, 1, 1, 3, 'Three of this event card'
+insert into cards select 'Event #4', 4, 1, 1, 1, 'Only one of this event card'
+insert into cards select 'Player Card #1', 1, 1, 0, 5, 'A human card'
+insert into cards select 'Player Card #2', 1, 1, 0, 5, 'A human card'
+insert into cards select 'Player Card #3', 2, 1, 0, 5, 'A human card'
+insert into cards select 'Player Card #4', 2, 1, 0, 5, 'A human card'
+insert into cards select 'Player Card #5', 3, 1, 0, 1, 'A rare human card'
+insert into cards select 'Player Card #6', 1, 2, 0, 4, 'An alien card'
+insert into cards select 'Player Card #7', 2, 2, 0, 3, 'An alien card'
+insert into cards select 'Player Card #8', 3, 2, 0, 3, 'A rare alien card'

@@ -23,7 +23,11 @@ namespace ProcessOfElimination.Controllers
             if (!ModelState.IsValid)
                 return View("Index", model);
 
-            var game = GameService.Create(model, User.Identity.GetUserId());
+            var game = GameService.CreateGame(model, User.Identity.GetUserId());
+            
+            var db = new Entities();
+            db.Games.Add(game);
+            db.SaveChanges();
 
             return RedirectToAction("Play", "Game", new { id = game.ID });
         }

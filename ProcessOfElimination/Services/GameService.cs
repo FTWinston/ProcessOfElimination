@@ -10,10 +10,8 @@ namespace ProcessOfElimination.Services
 {
     public static class GameService
     {
-        public static Game Create(CreateViewModel model, string hostUserID)
+        public static Game CreateGame(CreateViewModel model, string hostUserID)
         {
-            var db = new Entities();
-
             var game = new Game();
             game.Name = model.Name;
             game.NumPlayers = model.NumPlayers;
@@ -26,13 +24,10 @@ namespace ProcessOfElimination.Services
             game.HasFinished = false;
             game.CreatedOn = DateTime.Now;
 
-            db.Games.Add(game);
-            db.SaveChanges();
-
             return game;
         }
 
-        public static GamePlayer JoinGame(Entities db, Game game, string currentUserID, string name)
+        public static GamePlayer JoinGame(Game game, string currentUserID, string name)
         {
             GamePlayer player = new GamePlayer();
             player.Name = name;
@@ -42,8 +37,7 @@ namespace ProcessOfElimination.Services
             player.PublicTeamID = player.PrivateTeamID = 1; // humans, default team
             player.UserID = currentUserID;
 
-            db.GamePlayers.Add(player);
-            db.SaveChanges();
+            game.GamePlayers.Add(player);
             
             return player;
         }
@@ -68,16 +62,22 @@ namespace ProcessOfElimination.Services
             game.LoadCards(db);
             var firstPlayer = game.SetupPlayers();
             game.StartTurn(firstPlayer, 1);
-
-            db.SaveChanges();
-
-            // TODO: send notification email?
         }
         
-        private static void StartNextTurn(Entities db, Game game)
+        public static void ProcessEndOfTurn(Game game)
         {
-            // end the current turn, start the next
-            throw new NotImplementedException();
+            // end the current turn
+            var currentTurn = game.GameTurns.OrderByDescending(gt => gt.Number).First();
+            EndTurn(currentTurn);
+
+            // either end the game or start the next turn
+            if (game.ShouldEndGame())
+                game.EndGame();
+            else
+            {
+                var nextPlayer = game.GetNextPlayer(currentTurn.ActivePlayer);
+                StartTurn(game, nextPlayer, currentTurn.Number + 1);
+            }
         }
 
         private static void LoadCards(this Game game, Entities db)
@@ -99,7 +99,6 @@ namespace ProcessOfElimination.Services
                 cards[i].Position = i + 1;
 
             db.GameCards.AddRange(cards);
-            db.SaveChanges();
         }
         
         private static IEnumerable<GameCard> DrawCards(this Game game, bool eventCards, int number = 1)
@@ -162,6 +161,26 @@ namespace ProcessOfElimination.Services
             return players.First();
         }
 
+        private static GamePlayer GetNextPlayer(this Game game, GamePlayer previous)
+        {
+            var next = game.GamePlayers.Where(gp => gp.Position > previous.Position).OrderBy(gp => gp.Position).FirstOrDefault();
+
+            if (next == null)
+                next = game.GamePlayers.OrderBy(gp => gp.Position).First();
+
+            return next;
+        }
+
+        private static IEnumerable<GamePlayer> GetPlayersInOrder(this GameTurn turn)
+        {
+            var players = turn.Game.GamePlayers;
+            foreach (var player in players.Where(gp => gp.Position >= turn.ActivePlayer.Position).OrderBy(gp => gp.Position))
+                yield return player;
+
+            foreach (var player in players.Where(gp => gp.Position <  turn.ActivePlayer.Position).OrderBy(gp => gp.Position))
+                yield return player;
+        }
+
         private static void StartTurn(this Game game, GamePlayer player, int turnNumber)
         {
             // deal cards to this player, bringing them up to the number of players in the game
@@ -189,7 +208,31 @@ namespace ProcessOfElimination.Services
 
         private static void EndTurn(this GameTurn turn)
         {
+            // TODO: resolve event
+
+            foreach (var player in turn.GetPlayersInOrder())
+            {
+                // TODO: resolve any action played by this player
+            }
+            
             throw new NotImplementedException();
+        }
+
+        private static bool ShouldEndGame(this Game game)
+        {
+            // if no players left on human team, game should end
+            if (!game.GamePlayers.Any(gp => gp.PrivateTeamID == 1))
+                return true;
+
+            // TODO: any win conditions for the human players?
+            throw new NotImplementedException();
+        }
+
+        private static void EndGame(this Game game)
+        {
+            game.HasFinished = true;
+
+            // TODO: well is there anything more to it than that, actually?
         }
     }
 }
