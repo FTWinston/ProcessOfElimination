@@ -95,10 +95,14 @@ namespace ProcessOfElimination.Services
                 }
 
             cards.Shuffle();
+            
             for (var i = 0; i < cards.Count; i++)
-                cards[i].Position = i + 1;
-
-            db.GameCards.AddRange(cards);
+            {
+                var card = cards[i];
+                card.Position = i + 1;
+                card.ID = -1 - i; // temp ID, to keep FK happy
+                game.GameCards.Add(card);
+            }
         }
         
         private static IEnumerable<GameCard> DrawCards(this Game game, bool eventCards, int number = 1)
